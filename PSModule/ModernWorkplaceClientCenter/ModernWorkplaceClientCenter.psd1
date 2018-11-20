@@ -69,10 +69,9 @@ PowerShellVersion = '5.0'
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = 'Get-DsRegStatus', 'Get-MDMDeviceOwnership', 
-               'Get-MDMEnrollmentStatus', 'Get-MDMMsiApp', 'Get-MDMPSScriptStatus', 
-               'Get-SiteToZoneAssignment', 'Invoke-AnalyzeHybridJoinStatus', 
-               'Invoke-AnalyzeMDMEnrollmentStatus', 'Reset-MDMEnrollmentStatus'
+FunctionsToExport = 'Get-MWCCDsRegStatus', 'Invoke-MWCCAnalyzeHybridJoinStatus', 
+               'Get-MWCCSiteToZoneAssignment', 'Get-MWCCMdmMsiApp', 
+               'Get-MWCCIntuneDeviceOwnership'
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
@@ -107,7 +106,7 @@ PrivateData = @{
         ProjectUri = 'https://github.com/ThomasKur/ModernWorkplaceClientCenter'
 
         # A URL to an icon representing this module.
-        # IconUri = ''
+        IconUri = 'https://raw.githubusercontent.com/ThomasKur/ModernWorkplaceClientCenter/master/Logo/MWCC-Logo-512.png'
 
         # ReleaseNotes of this module
         # ReleaseNotes = ''
@@ -123,7 +122,7 @@ PrivateData = @{
 # HelpInfoURI = ''
 
 # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
-DefaultCommandPrefix = ''
+# DefaultCommandPrefix = ''
 
 }
 

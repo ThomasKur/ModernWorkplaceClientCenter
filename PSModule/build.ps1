@@ -20,9 +20,12 @@ if($ScriptAnalyzerResult){
 $ExportableFunctions = (Get-ChildItem -Path "$ModulePath\Functions" -Filter '*.ps1').BaseName
 $ReleaseNotes = ((Get-Content ".\ReleaseNotes.md" -Raw) -split "##")
 $ReleaseNote = ($ReleaseNotes[1] + "`n`n To see the complete history, checkout the Release Notes on Github")
-Update-ModuleManifest -Path "$ModulePath\ModernWorkplaceClientCenter.psd1" -FunctionsToExport $ExportableFunctions -ReleaseNotes $ReleaseNote
+Update-ModuleManifest -Path "$ModulePath\ModernWorkplaceClientCenter.psd1" -FunctionsToExport $ExportableFunctions
+Update-ModuleManifest -Path "$ModulePath\ModernWorkplaceClientCenter.psd1" -ReleaseNotes $ReleaseNote
+Update-ModuleManifest -Path "$ModulePath\ModernWorkplaceClientCenter.psd1" -IconUri "https://raw.githubusercontent.com/ThomasKur/ModernWorkplaceClientCenter/master/Logo/MWCC-Logo-512.png"
 
 #Update Version
+$ModuelManifestTest = Test-ModuleManifest -Path "$ModulePath\ModernWorkplaceClientCenter.psd1" -ErrorAction Stop
 $CurrentVersion = $ModuelManifestTest.Version
 $SuggestedNewVersion = [Version]::new($CurrentVersion.Major,$CurrentVersion.Minor,$CurrentVersion.Build + 1)
 $title = "Increment Version" 
@@ -41,7 +44,6 @@ switch ($result) {
     }
 }
 Test-ModuleManifest -Path "$ModulePath\ModernWorkplaceClientCenter.psd1" -ErrorAction Stop
-
 #endregion
 
 #region Sign Scripts
