@@ -1,10 +1,13 @@
 # Modern Workplace Client Center
+
 <img align="right" src="https://raw.githubusercontent.com/ThomasKur/ModernWorkplaceClientCenter/master/Logo/MWCC-Logo-256.png" alt="MWCC Logo">This repository will be the home of a PowerShell Module, which helps to simplify tasks on MDM managed Windows clients. In a second step there will be a UI, which leverages these PowerShell functions for Admins which like a UI. Feedback is welcome!
 
 ## PowerShell Module 
+
 This PowerShell module will contain all functions for DevOps like me, which like to use PowerShell everywhere. The goal of the module is not only to read and display properties, instead it should correleate settings and event log entries together and help you during troubleshooting. If you have some specific use cases like "If this happens, then you can apply this solution", then I'm happy to get your feedback.
 
 The following functions are available now:
+
 * Get-DsRegStatus --> Ever used dsregcmd and thought about why it is not a PowerShell command? Here it is...
 * Invoke-AnalyzeHybridJoinStatus --> Troubleshoots Azure Hybrid Join status and covers already 13 checks.
 * Invoke-AnalyzeMDMEnrollmentStatus --> Troubleshoots Windows 10 MDM Enrollment status and covers 4 checks.
@@ -16,6 +19,7 @@ The following functions are available now:
 * Get-MDMPSScriptStatus --> Returns information about the execution of PowerShell Scripts deployed with Intune.
 
 The following functions will be available in the near future:
+
 * Autopilot Troubleshooting
 * Improvement Intune Enrollment Troubleshooting
 * Intune MSI App Installation Troubleshooting
@@ -24,6 +28,7 @@ The following functions will be available in the near future:
 * Pester Tests
 
 ### Usage
+
 Download the PS module from the PSGallery and Import the module:
 
 ```
@@ -37,7 +42,9 @@ Get-Command -Module ModernWorkplaceClientCenter
 ```
 
 ## Client Center UI
+
 This is a planned project for the next months as soon the PowerShell functions are well working.
 
 # Issues / Feedback
+
 For any issues or feedback related to this module, please register for GitHub, and post your inquiry to this project's issue tracker.

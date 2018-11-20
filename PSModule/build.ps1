@@ -6,6 +6,21 @@ $no = New-Object System.Management.Automation.Host.ChoiceDescription "&No","Desc
 $cancel = New-Object System.Management.Automation.Host.ChoiceDescription "&Cancel","Description."
 $options = [System.Management.Automation.Host.ChoiceDescription[]]($yes, $no, $cancel)
 
+$title = "Version History" 
+$message = "Have you updated the Release Notes for the new Version?"
+$result = $host.ui.PromptForChoice($title, $message, $options, 1)
+switch ($result) {
+    0{
+
+    }
+    1{
+        Write-Error "Canceled Publishing Process" -ErrorAction Stop
+    }
+    2{
+        Write-Error "Canceled Publishing Process" -ErrorAction Stop
+    }
+}
+
 #region Code Analyzer
 Import-Module -Name PSScriptAnalyzer 
 $ScriptAnalyzerResult = Invoke-ScriptAnalyzer $ModulePath -Recurse -ErrorAction Stop -ExcludeRule "PSAvoidTrailingWhitespace"
@@ -20,9 +35,6 @@ if($ScriptAnalyzerResult){
 $ExportableFunctions = (Get-ChildItem -Path "$ModulePath\Functions" -Filter '*.ps1').BaseName
 $ReleaseNotes = ((Get-Content ".\ReleaseNotes.md" -Raw) -split "##")
 $ReleaseNote = ($ReleaseNotes[1] + "`n`n To see the complete history, checkout the Release Notes on Github")
-Update-ModuleManifest -Path "$ModulePath\ModernWorkplaceClientCenter.psd1" -FunctionsToExport $ExportableFunctions
-Update-ModuleManifest -Path "$ModulePath\ModernWorkplaceClientCenter.psd1" -ReleaseNotes $ReleaseNote
-Update-ModuleManifest -Path "$ModulePath\ModernWorkplaceClientCenter.psd1" -IconUri "https://raw.githubusercontent.com/ThomasKur/ModernWorkplaceClientCenter/master/Logo/MWCC-Logo-512.png"
 
 #Update Version
 $ModuelManifestTest = Test-ModuleManifest -Path "$ModulePath\ModernWorkplaceClientCenter.psd1" -ErrorAction Stop
@@ -34,10 +46,18 @@ $result = $host.ui.PromptForChoice($title, $message, $options, 1)
 switch ($result) {
     0{
         Write-Information "You selected yes to increase the version. Updating Mnaifest..."
-        Update-ModuleManifest -Path "$ModulePath\ModernWorkplaceClientCenter.psd1" -ModuleVersion $SuggestedNewVersion
+        Update-ModuleManifest -Path "$ModulePath\ModernWorkplaceClientCenter.psd1" `
+            -FunctionsToExport $ExportableFunctions `
+            -ReleaseNotes $ReleaseNote `
+            -IconUri "https://raw.githubusercontent.com/ThomasKur/ModernWorkplaceClientCenter/master/Logo/MWCC-Logo-512.png" `
+            -ModuleVersion $SuggestedNewVersion
     }
     1{
         Write-Host "You selected no. The version will not be increased."
+        Update-ModuleManifest -Path "$ModulePath\ModernWorkplaceClientCenter.psd1" `
+            -FunctionsToExport $ExportableFunctions `
+            -ReleaseNotes $ReleaseNote `
+            -IconUri "https://raw.githubusercontent.com/ThomasKur/ModernWorkplaceClientCenter/master/Logo/MWCC-Logo-512.png"
     }
     2{
         Write-Error "Canceled Publishing Process" -ErrorAction Stop
@@ -49,10 +69,10 @@ Test-ModuleManifest -Path "$ModulePath\ModernWorkplaceClientCenter.psd1" -ErrorA
 #region Sign Scripts
     Copy-Item -Path $ModulePath -Destination $env:TEMP -Recurse -Force
     $cert = get-item Cert:\CurrentUser\My\* -CodeSigningCert
-    $PSFiles = Get-ChildItem -Path $env:TEMP\ModernWorkplaceClientCenter -Recurse | Where-Object {$_.Extension -eq "ps1" -or $_.Extension -eq "psm1"}
+    $PSFiles = Get-ChildItem -Path $env:TEMP\ModernWorkplaceClientCenter -Recurse | Where-Object {$_.Extension -eq ".ps1" -or $_.Extension -eq ".psm1"}
     foreach($PSFile in $PSFiles){
         Set-AuthenticodeSignature -Certificate $cert -TimestampServer http://timestamp.verisign.com/scripts/timstamp.dll -FilePath ($PSFile.FullName) -Verbose
     }
 #endregion
 $PSGallerAPIKey = Read-Host "Insert PSGallery API Key"
-Publish-Module -Path $env:TEMP\ModernWorkplaceClientCenter -NuGetApiKey $PSGallerAPIKey -WhatIf -Verbose
+Publish-Module -Path $env:TEMP\ModernWorkplaceClientCenter -NuGetApiKey $PSGallerAPIKey -Verbose

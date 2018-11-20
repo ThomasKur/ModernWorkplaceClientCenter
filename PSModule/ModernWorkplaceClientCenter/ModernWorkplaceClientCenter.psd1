@@ -12,7 +12,7 @@
 RootModule = 'ModernWorkplaceClientCenter.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.1.0'
+ModuleVersion = '0.1.1'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -69,9 +69,10 @@ PowerShellVersion = '5.0'
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = 'Get-MWCCDsRegStatus', 'Invoke-MWCCAnalyzeHybridJoinStatus', 
-               'Get-MWCCSiteToZoneAssignment', 'Get-MWCCMdmMsiApp', 
-               'Get-MWCCIntuneDeviceOwnership'
+FunctionsToExport = 'Get-DsRegStatus', 'Get-MDMDeviceOwnership', 
+               'Get-MDMEnrollmentStatus', 'Get-MDMMsiApp', 'Get-MDMPSScriptStatus', 
+               'Get-SiteToZoneAssignment', 'Invoke-AnalyzeHybridJoinStatus', 
+               'Invoke-AnalyzeMDMEnrollmentStatus', 'Reset-MDMEnrollmentStatus'
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
@@ -109,13 +110,31 @@ PrivateData = @{
         IconUri = 'https://raw.githubusercontent.com/ThomasKur/ModernWorkplaceClientCenter/master/Logo/MWCC-Logo-512.png'
 
         # ReleaseNotes of this module
-        # ReleaseNotes = ''
+        ReleaseNotes = ' 0.1.0 - First Release
+* Get-DsRegStatus --> Ever used dsregcmd and thought about why it is not a PowerShell command? Here it is...
+* Invoke-AnalyzeHybridJoinStatus --> Troubleshoots Azure Hybrid Join status and covers already 13 checks.
+* Invoke-AnalyzeMDMEnrollmentStatus --> Troubleshoots Windows 10 MDM Enrollment status and covers 4 checks.
+* Get-SiteToZoneAssignment --> Returns Internet Explorer Site to Zone assignments. This is more a helper function, but perhaps it helps you somewhere else.
+* Get-MdmMsiApp --> Retrieves information about all MDM assigned applications, including their installation state.
+* Get-MDMDeviceOwnership --> Returns information about the Ownership of the Device.
+* Reset-MDMEnrollmentStatus --> Resets Windows 10 MDM Enrollment Status.
+* Get-MDMEnrollmentStatus --> Get Windows 10 MDM Enrollment Status.
+* Get-MDMPSScriptStatus --> Returns information about the execution of PowerShell Scripts deployed with Intune.
+
+
+ To see the complete history, checkout the Release Notes on Github'
+
+        # Prerelease string of this module
+        # Prerelease = ''
+
+        # Flag to indicate whether the module requires explicit user acceptance for install/update
+        # RequireLicenseAcceptance = $false
 
         # External dependent modules of this module
-        # ExternalModuleDependencies = ''
+        # ExternalModuleDependencies = @()
 
     } # End of PSData hashtable
-    
+
  } # End of PrivateData hashtable
 
 # HelpInfo URI of this module

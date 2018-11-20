@@ -1,5 +1,15 @@
 # Release Notes
+
+## 0.1.2 - Improved build process
+
+* Bugfixing Get-MDMEnrollmentStatus, Get-MDMMsiApp, Get-MDMPSScriptStatus for unenrolled devices.
+
+## 0.1.1 - Improved build process
+
+* Improved build.ps1
+
 ## 0.1.0 - First Release
+
 * Get-DsRegStatus --> Ever used dsregcmd and thought about why it is not a PowerShell command? Here it is...
 * Invoke-AnalyzeHybridJoinStatus --> Troubleshoots Azure Hybrid Join status and covers already 13 checks.
 * Invoke-AnalyzeMDMEnrollmentStatus --> Troubleshoots Windows 10 MDM Enrollment status and covers 4 checks.

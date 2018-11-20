@@ -11,13 +11,17 @@ function Get-MDMPSScriptStatus(){
 
     #>
     $PSStatus = @()
-    $Users = Get-ChildItem HKLM:\SOFTWARE\Microsoft\IntuneManagementExtension\Policies\
-    foreach($user in $users){
-        $Scripts = Get-ChildItem "$($user.PSPath)"
-        foreach($Script in $Scripts){
-            $Script = Get-ItemProperty $Script.PSPath
-            $PSStatus += $App
+    $Users = Get-ChildItem HKLM:\SOFTWARE\Microsoft\IntuneManagementExtension\Policies\ -ErrorAction SilentlyContinue
+    if($Users){
+        foreach($user in $users){
+            $Scripts = Get-ChildItem "$($user.PSPath)"
+            foreach($Script in $Scripts){
+                $Script = Get-ItemProperty $Script.PSPath
+                $PSStatus += $App
+            }
         }
+    } else {
+        Write-Error "Device is not enrolled to MDM."
     }
     return $PSStatus
 }
