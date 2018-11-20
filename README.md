@@ -1,10 +1,8 @@
 # Modern Workplace Client Center
-This repository will be the home of a PowerShell Module, which helps to simplify tasks on MDM managed Windows clients. In a second step there will be a UI, which leverages these PowerShell functions for Admins which like a UI. Feedback is welcome!
+<img align="right" src="https://raw.githubusercontent.com/ThomasKur/ModernWorkplaceClientCenter/master/Logo/MWCC-Logo-256.png" alt="MWCC Logo">This repository will be the home of a PowerShell Module, which helps to simplify tasks on MDM managed Windows clients. In a second step there will be a UI, which leverages these PowerShell functions for Admins which like a UI. Feedback is welcome!
 
-![MWCC Logo](https://raw.githubusercontent.com/ThomasKur/ModernWorkplaceClientCenter/master/Logo/MWCC-Logo-256.png)
-
-## PS Module 
-This module will contain all functions for DevOps like me, which like to use PowerShell everywhere. The goal of the module is not only to read and display properties, instead it should correleate settings and event log entries together and help you during troubleshooting. If you have some specific use cases like "If this happens, then you can apply this solution", then I'm happy to get your feedback.
+## PowerShell Module 
+This PowerShell module will contain all functions for DevOps like me, which like to use PowerShell everywhere. The goal of the module is not only to read and display properties, instead it should correleate settings and event log entries together and help you during troubleshooting. If you have some specific use cases like "If this happens, then you can apply this solution", then I'm happy to get your feedback.
 
 The following functions are available now:
 * Get-DsRegStatus --> Ever used dsregcmd and thought about why it is not a PowerShell command? Here it is...
