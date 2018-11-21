@@ -51,13 +51,44 @@ function Invoke-AnalyzeHybridJoinStatus {
         } else {
             $possibleErrors += New-AnalyzeResult -TestName "ADServiceConnectionPoint" -Type Warning -Issue "Current Value: $($scp.Keywords) `n Validate if the AzureAD GUID and tenant name is correct." -PossibleCause "Sometimes there are incorrect vslues left from a PoC or Testenvironment which can result in an incorrect entriy."
         }
-    }
 
-    if($dsreg.WorkplaceJoined -eq "YES"){
-        if($dsreg.DomainJoined -eq "YES"){
-            $possibleErrors += New-AnalyzeResult -TestName "WorkplaceJoined" -Type Error -Issue "A work or school account was added before the completion of a hybrid Azure AD join." -PossibleCause "If the value is YES, a work or school account was added prior to the completion of the hybrid Azure AD join. In this case, the account is ignored when using the Anniversary Update version of Windows 10 (1607). This value should be NO for a domain-joined computer that is also hybrid Azure AD joined."
+        if($dsreg.WorkplaceJoined -eq "YES"){
+            if($dsreg.DomainJoined -eq "YES"){
+                $possibleErrors += New-AnalyzeResult -TestName "WorkplaceJoined" -Type Error -Issue "A work or school account was added before the completion of a hybrid Azure AD join." -PossibleCause "If the value is YES, a work or school account was added prior to the completion of the hybrid Azure AD join. In this case, the account is ignored when using the Anniversary Update version of Windows 10 (1607). This value should be NO for a domain-joined computer that is also hybrid Azure AD joined."
+            }
+        }
+        
+        $IESites = Get-SiteToZoneAssignment | Where-Object { $_.Url -match "https://autologon.microsoftazuread-sso.com" -and $_.Zone -eq "Local Intranet Zone" }
+        if($null -eq $IESites){
+            $possibleErrors += New-AnalyzeResult -TestName "IE Site Assignment" -Type Warning -Issue "We could not detect https://autologon.microsoftazuread-sso.com in the Local Intranet Zone of Internet Explorer." -PossibleCause "One possibility is, that you have configured it manually on this test client in Internet Explorer. This check only validates, if it is assigned through a group policy.
+            The second option is, that you configured a toplevel site in the intranet site and not especially the above mentioned URL including the protocol."
+        }
+
+        $IESites = Get-SiteToZoneAssignment | Where-Object { $_.Url -match "https://device.login.microsoftonline.com" -and $_.Zone -eq "Local Intranet Zone" }
+        if($null -eq $IESites){
+            $possibleErrors += New-AnalyzeResult -TestName "IE Site Assignment" -Type Warning -Issue "We could not detect https://device.login.microsoftonline.com in the Local Intranet Zone of Internet Explorer. To avoid certificate prompts when users in register devices authenticate to Azure AD you can push a policy to your domain-joined devices to add the following URL to the Local Intranet zone in Internet Explorer." -PossibleCause "One possibility is, that you have configured it manually on this test client in Internet Explorer. This check only validates, if it is assigned through a group policy.
+            The second option is, that you configured a toplevel site in the intranet site and not especially the above mentioned URL including the protocol."
+        }
+        # GPO Checks
+        try{
+            $IEStatusBarUpdates = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\1" -Name 2103 -ErrorAction SilentlyContinue
+        } catch {
+            $IEStatusBarUpdates = $null
+        }
+        if($IEStatusBarUpdates -eq 3){
+            $possibleErrors += New-AnalyzeResult -TestName "IE Update Status Bar" -Type Error -Issue "The following setting should be enabled in the user's intranet zone, if you plan to use SSO: 'Allow status bar updates via script.'. This is also the default value, which means you have a policy which disables this explicity." -PossibleCause "Reconfigure the policy"
+        }
+        try{
+            $AutoDeviceReg = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WorkplaceJoin" -Name autoWorkplaceJoin -ErrorAction SilentlyContinue
+        } catch {
+            $AutoDeviceReg = $null
+        }
+        if($AutoDeviceReg -ne 1){
+            $possibleErrors += New-AnalyzeResult -TestName "Auto Workplace Join GPO" -Type Error -Issue "The following setting should be enabled to trigger the automatic Azure AD Hybrid Join." -PossibleCause "Reconfigure the policy: Computer Configuration > Policies > Administrative Templates > Windows Components > Device Registration > Register domain-joined computers as devices"
         }
     }
+
+    
 
     if($dsreg.WamDefaultSet -eq "NO"){
         $possibleErrors += New-AnalyzeResult -TestName "WamDefaultSet" -Type Error -Issue "These fields indicate whether the user has successfully authenticated to Azure AD when signing in to the device." -PossibleCause "If the values are NO, it could be due:
@@ -72,34 +103,7 @@ function Invoke-AnalyzeHybridJoinStatus {
         Alternate Login ID
         HTTP Proxy not found"
     }
-    $IESites = Get-SiteToZoneAssignment | Where-Object { $_.Url -match "https://autologon.microsoftazuread-sso.com" -and $_.Zone -eq "Local Intranet Zone" }
-    if($null -eq $IESites){
-        $possibleErrors += New-AnalyzeResult -TestName "IE Site Assignment" -Type Warning -Issue "We could not detect https://autologon.microsoftazuread-sso.com in the Local Intranet Zone of Internet Explorer." -PossibleCause "One possibility is, that you have configured it manually on this test client in Internet Explorer. This check only validates, if it is assigned through a group policy.
-        The second option is, that you configured a toplevel site in the intranet site and not especially the above mentioned URL including the protocol."
-    }
-
-    $IESites = Get-SiteToZoneAssignment | Where-Object { $_.Url -match "https://device.login.microsoftonline.com" -and $_.Zone -eq "Local Intranet Zone" }
-    if($null -eq $IESites){
-        $possibleErrors += New-AnalyzeResult -TestName "IE Site Assignment" -Type Warning -Issue "We could not detect https://device.login.microsoftonline.com in the Local Intranet Zone of Internet Explorer. To avoid certificate prompts when users in register devices authenticate to Azure AD you can push a policy to your domain-joined devices to add the following URL to the Local Intranet zone in Internet Explorer." -PossibleCause "One possibility is, that you have configured it manually on this test client in Internet Explorer. This check only validates, if it is assigned through a group policy.
-        The second option is, that you configured a toplevel site in the intranet site and not especially the above mentioned URL including the protocol."
-    }
-    # GPO Checks
-    try{
-        $IEStatusBarUpdates = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\1" -Name 2103 -ErrorAction SilentlyContinue
-    } catch {
-        $IEStatusBarUpdates = $null
-    }
-    if($IEStatusBarUpdates -eq 3){
-        $possibleErrors += New-AnalyzeResult -TestName "IE Update Status Bar" -Type Error -Issue "The following setting should be enabled in the user's intranet zone, if you plan to use SSO: 'Allow status bar updates via script.'. This is also the default value, which means you have a policy which disables this explicity." -PossibleCause "Reconfigure the policy"
-    }
-    try{
-        $AutoDeviceReg = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WorkplaceJoin" -Name autoWorkplaceJoin -ErrorAction SilentlyContinue
-    } catch {
-        $AutoDeviceReg = $null
-    }
-    if($AutoDeviceReg -ne 1){
-        $possibleErrors += New-AnalyzeResult -TestName "Auto Workplace Join GPO" -Type Error -Issue "The following setting should be enabled to trigger the automatic Azure AD Hybrid Join." -PossibleCause "Reconfigure the policy: Computer Configuration > Policies > Administrative Templates > Windows Components > Device Registration > Register domain-joined computers as devices"
-    }
+    
     # Analyze Eventlogs
     if($IncludeEventLog){
         $AADEvents = Get-WinEvent -LogName "Microsoft-Windows-AAD/Operational" | Where-Object { ($_.LevelDisplayName -eq "Error" -or $_.LevelDisplayName -eq "Warning") -and $_.TimeCreated -gt [DateTime]::Now.AddMinutes(-10)  }
