@@ -38,7 +38,7 @@ function Invoke-AnalyzeMDMEnrollmentStatus {
          $possibleErrors += New-AnalyzeResult -TestName "Azure AD Join" -Type Warning -Issue "The device is not Azure AD Joined or Hybrid registered. Therefore auto enrollment will not work. If you do the enrollment manually, then you can ignore this warning." -PossibleCause "Try analysing the Azure AD Hybrid Join by using Invoke-AnalyzeHybridJoinStatus."
     }
     $AutoEnrollTask =  Get-ScheduledTask -TaskName "Schedule created by enrollment client for automatically enrolling in MDM from AAD" -ErrorAction SilentlyContinue
-    if($null -eq $AutoEnrollTask){
+    if($null -eq $AutoEnrollTask -and $dsregstatus.DomainJoined -eq "YES"){
          $possibleErrors += New-AnalyzeResult -TestName "Scheduled Task" -Type Warning -Issue "The task for auto enrollment could not be found in the Windows Event log '\Microsoft\Windows\EnterpriseMgmt'." -PossibleCause "Please check if automatic enrollment is configured by GPO 'https://docs.microsoft.com/en-us/windows/client-management/mdm/enroll-a-windows-10-device-automatically-using-group-policy#configure-the-auto-enrollment-for-a-group-of-devices'"
     }
     # Analyze Eventlogs
