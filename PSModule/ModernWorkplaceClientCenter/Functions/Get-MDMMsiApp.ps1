@@ -12,7 +12,7 @@ function Get-MDMMsiApp() {
     #>
     [OutputType([System.Object[]])]
     $AppStatus = @()
-    if(Get-MDMEnrollmentStatus).EnrollmentState -eq 1){
+    if((Get-MDMEnrollmentStatus).EnrollmentState -eq 1){
         $Users = Get-ChildItem HKLM:\SOFTWARE\Microsoft\EnterpriseDesktopAppManagement\ -ErrorAction SilentlyContinue
         if($Users){
             $AddRemoveApps = Get-InstalledApplication

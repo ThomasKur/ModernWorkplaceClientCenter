@@ -1,6 +1,11 @@
 # Release Notes
 
-## 0.1.2 - Improved build process
+## 0.1.3 - Improved Analytic results
+
+* Improved Anayltic results by hiding unhelpful tips when the root cause is also well known like the device is not domain joined.
+* Get-MDMDeviceOwnership --> Return well interpretable strings instead of just integer values.
+
+## 0.1.2 - Bugfixing
 
 * Bugfixing Get-MDMEnrollmentStatus, Get-MDMMsiApp, Get-MDMPSScriptStatus for unenrolled devices.
 

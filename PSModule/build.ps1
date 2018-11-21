@@ -23,7 +23,7 @@ switch ($result) {
 
 #region Code Analyzer
 Import-Module -Name PSScriptAnalyzer 
-$ScriptAnalyzerResult = Invoke-ScriptAnalyzer $ModulePath -Recurse -ErrorAction Stop -ExcludeRule "PSAvoidTrailingWhitespace"
+$ScriptAnalyzerResult = Invoke-ScriptAnalyzer -Path $ModulePath -Recurse -ErrorAction Stop -ExcludeRule @("PSAvoidTrailingWhitespace")
 
 if($ScriptAnalyzerResult){
     $ScriptAnalyzerResult

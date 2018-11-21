@@ -11,8 +11,8 @@ function Get-MDMPSScriptStatus(){
 
     #>
     $PSStatus = @()
-    $Users = Get-ChildItem HKLM:\SOFTWARE\Microsoft\IntuneManagementExtension\Policies\ -ErrorAction SilentlyContinue
-    if($Users){
+    if((Get-MDMEnrollmentStatus).EnrollmentState -eq 1){
+        $Users = Get-ChildItem HKLM:\SOFTWARE\Microsoft\IntuneManagementExtension\Policies\ -ErrorAction SilentlyContinue
         foreach($user in $users){
             $Scripts = Get-ChildItem "$($user.PSPath)"
             foreach($Script in $Scripts){
