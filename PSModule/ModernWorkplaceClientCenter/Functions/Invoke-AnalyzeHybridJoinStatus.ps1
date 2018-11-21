@@ -39,7 +39,7 @@ function Invoke-AnalyzeHybridJoinStatus {
     }
 
     if($dsreg.DomainJoined -eq "NO"){
-        $possibleErrors += New-AnalyzeResult -TestName "DomainJoined" -Type Error -Issue "This field indicates whether the device is joined to an on-premises Active Directory or not. If the value is NO, the device cannot perform a hybrid Azure AD join." -PossibleCause "Join the device to a domain, otherwise no Hybrid Join will be possible."
+        $possibleErrors += New-AnalyzeResult -TestName "DomainJoined" -Type Error -Issue "The device is not joined to an on-premises Active Directory. Therefore, the device cannot perform a hybrid Azure AD join." -PossibleCause "Join the device to a domain, otherwise no Hybrid Join will be possible."
     } else {
         # Check Service Connection Point
         $getdomain = [System.Directoryservices.Activedirectory.Domain]::GetCurrentDomain()
@@ -57,7 +57,7 @@ function Invoke-AnalyzeHybridJoinStatus {
                 $possibleErrors += New-AnalyzeResult -TestName "WorkplaceJoined" -Type Error -Issue "A work or school account was added before the completion of a hybrid Azure AD join." -PossibleCause "If the value is YES, a work or school account was added prior to the completion of the hybrid Azure AD join. In this case, the account is ignored when using the Anniversary Update version of Windows 10 (1607). This value should be NO for a domain-joined computer that is also hybrid Azure AD joined."
             }
         }
-        
+
         $IESites = Get-SiteToZoneAssignment | Where-Object { $_.Url -match "https://autologon.microsoftazuread-sso.com" -and $_.Zone -eq "Local Intranet Zone" }
         if($null -eq $IESites){
             $possibleErrors += New-AnalyzeResult -TestName "IE Site Assignment" -Type Warning -Issue "We could not detect https://autologon.microsoftazuread-sso.com in the Local Intranet Zone of Internet Explorer." -PossibleCause "One possibility is, that you have configured it manually on this test client in Internet Explorer. This check only validates, if it is assigned through a group policy.
