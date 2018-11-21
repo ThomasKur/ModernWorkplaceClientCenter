@@ -13,10 +13,14 @@ function Get-MDMDeviceOwnership(){
     .NOTES
 
     #>
-    $CorpOwned = Get-ItemPropertyValue -Path HKLM:\SOFTWARE\Microsoft\Enrollments\Ownership -Name CorpOwned -ErrorAction SilentlyContinue
-    switch($CorpOwned){
-         0{return "PersonalOwned"}
-         1{return "CorporateOwned"}
-         $null{return "Unknown"}
-    }
+    if((Get-MDMEnrollmentStatus).EnrollmentState -eq 1){
+         $CorpOwned = Get-ItemPropertyValue -Path HKLM:\SOFTWARE\Microsoft\Enrollments\Ownership -Name CorpOwned -ErrorAction SilentlyContinue
+          switch($CorpOwned){
+               0{return "PersonalOwned"}
+               1{return "CorporateOwned"}
+               $null{return "Unknown"}
+          }
+     } else {
+          Write-Error "Device is not enrolled to MDM."
+     }
 }
