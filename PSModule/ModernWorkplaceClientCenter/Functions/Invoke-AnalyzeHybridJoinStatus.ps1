@@ -116,7 +116,7 @@ function Invoke-AnalyzeHybridJoinStatus {
         }
     }
     # No errors detected, return success message
-    if($null -eq $possibleErrors){
+    if($possibleErrors.Count -eq 0){
         $possibleErrors += New-AnalyzeResult -TestName "All" -Type Information -Issue "All tests went trough successfull." -PossibleCause ""
     }
 

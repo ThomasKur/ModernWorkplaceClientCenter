@@ -1,5 +1,10 @@
 # Release Notes
 
+## 0.1.4 - Added Analytic checks
+
+* New DNS checks in Invoke-AnalyzeMDMEnrollmentStatus
+* Bugfix in generating Successmessage in Invoke-AnalyzeMDMEnrollmentStatus
+
 ## 0.1.3 - Improved Analytic results
 
 * Improved Anayltic results by hiding unhelpful tips when the root cause is also well known like the device is not domain joined.

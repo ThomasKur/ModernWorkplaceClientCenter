@@ -16,13 +16,19 @@ function Invoke-AnalyzeMDMEnrollmentStatus {
     .Parameter IncludeEventLog
     By specifying this command also the most relevant Windows Event Log entries from the last 10 Minutes related to MDMe Enrollment are included in the Output of this CmdLet.
 
+     .Parameter UPNDomain
+     If you specify the UPN Domain od you users also the DNS Cnames are checked. Specify just the domain like "contoso.com".
     .Example
     # Displays a deep analyisis of the currently found issues in the system.
-    Invoke-AnalyzeIntuneEnrollmentStatus
+    Invoke-AnalyzeMDMIntuneEnrollmentStatus
 
+    .Example
+    # Displays a deep analyisis of the currently found issues in the system including DNS analysis.
+    Invoke-AnalyzeMDMIntuneEnrollmentStatus -UPNDomain "contoso.com"
     #>
     param(
-         [switch]$IncludeEventLog
+         [switch]$IncludeEventLog,
+         [string]$UPNDomain
     )
     $mdmstatus = Get-MDMEnrollmentStatus
     $possibleErrors = @()
@@ -37,6 +43,16 @@ function Invoke-AnalyzeMDMEnrollmentStatus {
     if($dsregstatus.AzureAdJoined -ne "YES"){
          $possibleErrors += New-AnalyzeResult -TestName "Azure AD Join" -Type Warning -Issue "The device is not Azure AD Joined or Hybrid registered. Therefore auto enrollment will not work. If you do the enrollment manually, then you can ignore this warning." -PossibleCause "Try analysing the Azure AD Hybrid Join by using Invoke-AnalyzeHybridJoinStatus."
     }
+    if(-not [String]::IsNullOrWhiteSpace($UPNDomain)){ 
+          $dns = Resolve-DnsName "EnterpriseEnrollment.$UPNDomain" -DnsOnly
+          if($dns[0].NameHost -ne "EnterpriseEnrollment-s.manage.microsoft.com"){
+               $possibleErrors += New-AnalyzeResult -TestName "DNSCheck" -Type Warning -Issue "The DNS CName 'EnterpriseEnrollment.$UPNDomain' is not pointing to 'EnterpriseEnrollment-s.manage.microsoft.com'. This is not required for Autoenrollment, but without it the servername has to be entered during a manual enrollment to Intune." -PossibleCause "Add the CName in your DNS Zone."
+          }
+          $dns = Resolve-DnsName "EnterpriseRegistration.$UPNDomain" -DnsOnly
+          if($dns[0].NameHost -ne "EnterpriseRegistration.windows.net"){
+               $possibleErrors += New-AnalyzeResult -TestName "DNSCheck" -Type Warning -Issue "The DNS CName 'EnterpriseRegistration.$UPNDomain' is not pointing to 'EnterpriseRegistration.windows.net'. This is not required for Autoenrollment, but without it the servername has to be entered during a manual enrollment to Intune." -PossibleCause "Add the CName in your DNS Zone."
+          }
+     }
     $AutoEnrollTask =  Get-ScheduledTask -TaskName "Schedule created by enrollment client for automatically enrolling in MDM from AAD" -ErrorAction SilentlyContinue
     if($null -eq $AutoEnrollTask -and $dsregstatus.DomainJoined -eq "YES"){
          $possibleErrors += New-AnalyzeResult -TestName "Scheduled Task" -Type Warning -Issue "The task for auto enrollment could not be found in the Windows Event log '\Microsoft\Windows\EnterpriseMgmt'." -PossibleCause "Please check if automatic enrollment is configured by GPO 'https://docs.microsoft.com/en-us/windows/client-management/mdm/enroll-a-windows-10-device-automatically-using-group-policy#configure-the-auto-enrollment-for-a-group-of-devices'"
@@ -50,7 +66,7 @@ function Invoke-AnalyzeMDMEnrollmentStatus {
     }
 
     # No errors detected, return success message
-    if($null -eq $possibleErrors){
+    if($possibleErrors.Count -eq 0){
          $possibleErrors += New-AnalyzeResult -TestName "All" -Type Information -Issue "All tests went trough successfull." -PossibleCause ""
     }
 
