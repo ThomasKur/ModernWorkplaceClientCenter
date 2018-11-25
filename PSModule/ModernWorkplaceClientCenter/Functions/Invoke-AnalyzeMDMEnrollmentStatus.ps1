@@ -16,9 +16,10 @@ function Invoke-AnalyzeMDMEnrollmentStatus {
     .Parameter IncludeEventLog
     By specifying this command also the most relevant Windows Event Log entries from the last 10 Minutes related to MDMe Enrollment are included in the Output of this CmdLet.
 
-     .Parameter UPNDomain
-     If you specify the UPN Domain od you users also the DNS Cnames are checked. Specify just the domain like "contoso.com".
-    .Example
+    .Parameter UPNDomain
+    If you specify the UPN Domain od you users also the DNS Cnames are checked. Specify just the domain like "contoso.com".
+    
+     .Example
     # Displays a deep analyisis of the currently found issues in the system.
     Invoke-AnalyzeMDMIntuneEnrollmentStatus
 
