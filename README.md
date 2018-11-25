@@ -9,8 +9,8 @@ This PowerShell module will contain all functions for DevOps like me, which like
 The following functions are available now:
 
 * Get-DsRegStatus --> Ever used dsregcmd and thought about why it is not a PowerShell command? Here it is...
-* Invoke-AnalyzeHybridJoinStatus --> Troubleshoots Azure Hybrid Join status and covers already 13 checks.
-* Invoke-AnalyzeMDMEnrollmentStatus --> Troubleshoots Windows 10 MDM Enrollment status and covers 4 checks.
+* Invoke-AnalyzeHybridJoinStatus --> Troubleshoots Azure Hybrid Join status and covers already 17 checks.
+* Invoke-AnalyzeMDMEnrollmentStatus --> Troubleshoots Windows 10 MDM Enrollment status and covers 6 checks.
 * Get-SiteToZoneAssignment --> Returns Internet Explorer Site to Zone assignments. This is more a helper function, but perhaps it helps you somewhere else.
 * Get-MdmMsiApp --> Retrieves information about all MDM assigned applications, including their installation state.
 * Get-MDMDeviceOwnership --> Returns information about the Ownership of the Device.
@@ -31,13 +31,13 @@ The following functions will be available in the near future:
 
 Download the PS module from the PSGallery and Import the module:
 
-```
+```powershell
 Install-Module ModernWorkplaceClientCenter
 ```
 
 Get all available Commands of the module:
 
-```
+```powershell
 Get-Command -Module ModernWorkplaceClientCenter 
 ```
 
@@ -45,6 +45,10 @@ Get-Command -Module ModernWorkplaceClientCenter
 
 This is a planned project for the next months as soon the PowerShell functions are well working.
 
-# Issues / Feedback
+## Issues / Feedback
 
 For any issues or feedback related to this module, please register for GitHub, and post your inquiry to this project's issue tracker.
+
+## Contributions
+
+* HttpConncetifityTester Module: This Work was prepared by a United States Government employee and, therefore, is excluded from copyright by Section 105 of the Copyright Act of 1976. Copyright and Related Rights in the Work worldwide are waived through the [CC0 1.0 Universal license](https://creativecommons.org/publicdomain/zero/1.0/). More great tools can be found here: https://github.com/nsacyber

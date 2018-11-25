@@ -1,5 +1,15 @@
 # Release Notes
 
+## 0.1.6 - Bugfix in Module Manifest
+
+* Bugfix Module manifest to Load Nested Module
+
+## 0.1.5 - Added Connectifity Tests
+
+* Correct Typos
+* Added connectifity Tests to Invoke-AnalyzeHybridJoinStatus
+* Added Nested Module HttpConnectivityTester from https://github.com/nsacyber/HTTP-Connectivity-Tester
+
 ## 0.1.4 - Added Analytic checks
 
 * New DNS checks in Invoke-AnalyzeMDMEnrollmentStatus

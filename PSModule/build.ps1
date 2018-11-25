@@ -49,6 +49,7 @@ switch ($result) {
         Update-ModuleManifest -Path "$ModulePath\ModernWorkplaceClientCenter.psd1" `
             -FunctionsToExport $ExportableFunctions `
             -ReleaseNotes $ReleaseNote `
+            -NestedModules @("NestedModules/HttpConnectivityTester/HttpConnectivityTester.psm1") `
             -IconUri "https://raw.githubusercontent.com/ThomasKur/ModernWorkplaceClientCenter/master/Logo/MWCC-Logo-512.png" `
             -ModuleVersion $SuggestedNewVersion
     }
@@ -57,7 +58,9 @@ switch ($result) {
         Update-ModuleManifest -Path "$ModulePath\ModernWorkplaceClientCenter.psd1" `
             -FunctionsToExport $ExportableFunctions `
             -ReleaseNotes $ReleaseNote `
-            -IconUri "https://raw.githubusercontent.com/ThomasKur/ModernWorkplaceClientCenter/master/Logo/MWCC-Logo-512.png"
+            -NestedModules @("NestedModules/HttpConnectivityTester/HttpConnectivityTester.psm1") `
+            -IconUri "https://raw.githubusercontent.com/ThomasKur/ModernWorkplaceClientCenter/master/Logo/MWCC-Logo-512.png" `
+            -ModuleVersion $CurrentVersion
     }
     2{
         Write-Error "Canceled Publishing Process" -ErrorAction Stop

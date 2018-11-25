@@ -68,7 +68,7 @@ function Invoke-AnalyzeMDMEnrollmentStatus {
 
     # No errors detected, return success message
     if($possibleErrors.Count -eq 0){
-         $possibleErrors += New-AnalyzeResult -TestName "All" -Type Information -Issue "All tests went trough successfull." -PossibleCause ""
+         $possibleErrors += New-AnalyzeResult -TestName "All" -Type Information -Issue "All tests went through successfully." -PossibleCause ""
     }
 
     return $possibleErrors
