@@ -1,5 +1,9 @@
 # Release Notes
 
+## 0.1.7 - Bugfix in Get-SiteToZoneAssignment
+
+* Bugfix Get-SiteToZoneAssignment: Method invocation failed because Microsoft.Win32.RegistryKey does not contain a method named 'op_Addition'
+
 ## 0.1.6 - Bugfix in Module Manifest
 
 * Bugfix Module manifest to Load Nested Module
