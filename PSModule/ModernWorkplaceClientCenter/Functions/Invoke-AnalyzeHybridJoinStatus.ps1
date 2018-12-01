@@ -60,13 +60,13 @@ function Invoke-AnalyzeHybridJoinStatus {
             }
         }
 
-        $IESites = Get-SiteToZoneAssignment | Where-Object { $_.Url -match "https://autologon.microsoftazuread-sso.com" -and $_.Zone -eq "Local Intranet Zone" }
+        $IESites = Get-SiteToZoneAssignment | Where-Object { ($_.Url -eq "https://autologon.microsoftazuread-sso.com" -or $_.Url -eq "autologon.microsoftazuread-sso.com") -and $_.Zone -eq "Local Intranet Zone" }
         if ($null -eq $IESites) {
             $possibleErrors += New-AnalyzeResult -TestName "IE Site Assignment" -Type Warning -Issue "We could not detect https://autologon.microsoftazuread-sso.com in the Local Intranet Zone of Internet Explorer." -PossibleCause "One possibility is, that you have configured it manually on this test client in Internet Explorer. This check only validates, if it is assigned through a group policy.
             The second option is, that you configured a toplevel site in the intranet site and not especially the above mentioned URL including the protocol."
         }
 
-        $IESites = Get-SiteToZoneAssignment | Where-Object { $_.Url -match "https://device.login.microsoftonline.com" -and $_.Zone -eq "Local Intranet Zone" }
+        $IESites = Get-SiteToZoneAssignment | Where-Object { ($_.Url -eq "https://device.login.microsoftonline.com" -or $_.Url -eq "device.login.microsoftonline.com") -and $_.Zone -eq "Local Intranet Zone" }
         if ($null -eq $IESites) {
             $possibleErrors += New-AnalyzeResult -TestName "IE Site Assignment" -Type Warning -Issue "We could not detect https://device.login.microsoftonline.com in the Local Intranet Zone of Internet Explorer. To avoid certificate prompts when users in register devices authenticate to Azure AD you can push a policy to your domain-joined devices to add the following URL to the Local Intranet zone in Internet Explorer." -PossibleCause "One possibility is, that you have configured it manually on this test client in Internet Explorer. This check only validates, if it is assigned through a group policy.
             The second option is, that you configured a toplevel site in the intranet site and not especially the above mentioned URL including the protocol."
@@ -143,7 +143,12 @@ function Invoke-AnalyzeHybridJoinStatus {
             $possibleErrors += New-AnalyzeResult -TestName "Connectivity" -Type "Error" -Issue "DNS name not resolved `n $($connectivity)" -PossibleCause "DNS server not correctly configured."
         }
         if ($connectivity.ActualStatusCode -ne $connectivity.ExpectedStatusCode) {
-            $possibleErrors += New-AnalyzeResult -TestName "Connectivity" -Type "Error" -Issue "Returned HTTP Status code '$($connectivity.ActualStatusCode)' is not expected '$($connectivity.ExpectedStatusCode)'`n $($connectivity)" -PossibleCause "Interfering Proxy server can change HTTP status codes."
+            if($connectivity.ActualStatusCode -eq 407){
+                $Cause = "Keep in mind that the proxy has to be set in WinHTTP.`nWindows 1709 and newer: Set the proxy by using netsh or WPAD. --> https://docs.microsoft.com/en-us/windows/desktop/WinHttp/winhttp-autoproxy-support `nWindows 1709 and older: Set the proxy by using 'netsh winhttp set proxy ?' --> https://blogs.technet.microsoft.com/netgeeks/2018/06/19/winhttp-proxy-settings-deployed-by-gpo/ "
+             } else {
+                $Cause = "Interfering Proxy server can change HTTP status codes."
+             }
+            $possibleErrors += New-AnalyzeResult -TestName "Connectivity" -Type "Error" -Issue "Returned HTTP Status code '$($connectivity.ActualStatusCode)' is not expected '$($connectivity.ExpectedStatusCode)'`n $($connectivity)" -PossibleCause $Cause
         }
         if ($null -ne $connectivity.ServerCertificate -and $connectivity.ServerCertificate.HasError) {
             $possibleErrors += New-AnalyzeResult -TestName "Connectivity" -Type "Error" -Issue "Certificate Error when connecting to $($connectivity.TestUrl)`n $(($connectivity.ServerCertificate))" -PossibleCause "Interfering Proxy server can change Certificate or not the Root Certificate is not trusted."
