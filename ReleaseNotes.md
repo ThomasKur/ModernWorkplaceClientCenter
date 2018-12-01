@@ -1,5 +1,11 @@
 # Release Notes
 
+## 0.1.8 - IE Site to Zone Checks improved to detect URL's correctly when entered without https
+
+* Verifiy Site to Zone alignment if not exaxtly the correct urls are entered(With or Without HTTP(S)) Invoke-AnalyzeHybridJoinStatus
+* Improve remediation action description if HTTP Error 407 is returned by a proxy
+* Added new function to analyze BranchCache traffic.
+
 ## 0.1.7 - Bugfix in Get-SiteToZoneAssignment
 
 * Bugfix Get-SiteToZoneAssignment: Method invocation failed because Microsoft.Win32.RegistryKey does not contain a method named 'op_Addition'
