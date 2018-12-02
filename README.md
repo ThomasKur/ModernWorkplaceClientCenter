@@ -17,6 +17,7 @@ The following functions are available now:
 * Reset-MDMEnrollmentStatus --> Resets Windows 10 MDM Enrollment Status.
 * Get-MDMEnrollmentStatus --> Get Windows 10 MDM Enrollment Status.
 * Get-MDMPSScriptStatus --> Returns information about the execution of PowerShell Scripts deployed with Intune.
+* Get-BCStatusDetailed --> Returns Branch Cache usage statistsics of the last downloads per source host including peer usage statistics.
 
 The following functions will be available in the near future:
 

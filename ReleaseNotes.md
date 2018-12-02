@@ -1,5 +1,9 @@
 # Release Notes
 
+## 0.1.9 - Delivery Optimization and Windows Analytics Troubleshooting
+
+* Improved loading of HttpCOnnectivtyTester Module
+
 ## 0.1.8 - IE Site to Zone Checks improved to detect URL's correctly when entered without https
 
 * Verifiy Site to Zone alignment if not exaxtly the correct urls are entered(With or Without HTTP(S)) Invoke-AnalyzeHybridJoinStatus

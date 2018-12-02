@@ -16,3 +16,11 @@ ForEach ($folder in $functionFolders) {
          Write-Warning "Path $folderPath not found. Some parts of the module will not work."
     }
 }
+
+$HttpConnectivitytester = Get-Module -Name HttpConnectivityTester
+if($HttpConnectivitytester){
+    Write-Verbose -Message "HttpConnectivityTester module is loaded."
+} else {
+    Write-Warning -Message "HttpConnectivityTester module is not loaded, trying to import it."
+    Import-Module -Name (Join-Path -Path $PSScriptRoot -ChildPath "NestedModules\HttpConnectivityTester\HttpConnectivityTester.psd1")
+}
