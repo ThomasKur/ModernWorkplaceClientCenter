@@ -1,14 +1,15 @@
 # Release Notes
 
-## 0.1.9 - Delivery Optimization and Windows Analytics Troubleshooting
+## 0.1.9 - Delivery Optimization
 
-* Improved loading of HttpCOnnectivtyTester Module
+* Improved loading of HttpConnectivtyTester Module
+* Added new function top analyze Delivery Optimization Configuration and connectifity on a device Invoke-AnalyzeDeliveryOptimization
 
 ## 0.1.8 - IE Site to Zone Checks improved to detect URL's correctly when entered without https
 
 * Verifiy Site to Zone alignment if not exaxtly the correct urls are entered(With or Without HTTP(S)) Invoke-AnalyzeHybridJoinStatus
 * Improve remediation action description if HTTP Error 407 is returned by a proxy
-* Added new function to analyze BranchCache traffic.
+* Added new function to analyze BranchCache traffic. Get-BCStatusDetailed
 
 ## 0.1.7 - Bugfix in Get-SiteToZoneAssignment
 
