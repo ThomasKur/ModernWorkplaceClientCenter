@@ -48,7 +48,7 @@ function Invoke-AnalyzeHybridJoinStatus {
         $scp = New-Object System.DirectoryServices.DirectoryEntry
         $scp.Path = "LDAP://CN=62a0ff2e-97b9-4513-943f-0d221bd30080,CN=Device Registration Configuration,CN=Services,CN=Configuration,DC=$getdomaindn";
         if ([String]::IsNullOrWhiteSpace($scp.Keywords)) {
-            $possibleErrors += New-AnalyzeResult -TestName "ADServiceConnectionPoint" -Type Error -Issue "No Service COnnection Point defined in Active Directory." -PossibleCause "Join the device to a domain, otherwise no Hybrid Join will be possible."
+            $possibleErrors += New-AnalyzeResult -TestName "ADServiceConnectionPoint" -Type Error -Issue "No Service Connection Point defined in Active Directory." -PossibleCause "Join the device to a domain, otherwise no Hybrid Join will be possible."
         }
         else {
             $possibleErrors += New-AnalyzeResult -TestName "ADServiceConnectionPoint" -Type Warning -Issue "Current Value: $($scp.Keywords) `n Validate if the AzureAD GUID and tenant name is correct." -PossibleCause "Sometimes there are incorrect vslues left from a PoC or Testenvironment which can result in an incorrect entriy."
@@ -62,14 +62,22 @@ function Invoke-AnalyzeHybridJoinStatus {
 
         $IESites = Get-SiteToZoneAssignment | Where-Object { ($_.Url -eq "https://autologon.microsoftazuread-sso.com" -or $_.Url -eq "autologon.microsoftazuread-sso.com") -and $_.Zone -eq "Local Intranet Zone" }
         if ($null -eq $IESites) {
-            $possibleErrors += New-AnalyzeResult -TestName "IE Site Assignment" -Type Warning -Issue "We could not detect https://autologon.microsoftazuread-sso.com in the Local Intranet Zone of Internet Explorer." -PossibleCause "One possibility is, that you have configured it manually on this test client in Internet Explorer. This check only validates, if it is assigned through a group policy.
-            The second option is, that you configured a toplevel site in the intranet site and not especially the above mentioned URL including the protocol."
+            #Check if it is also not set manually:
+            $IESitesManual = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\microsoftazuread-sso.com\autologon" -Name https -ErrorAction SilentlyContinue
+            if($IESitesManual -ne 1){
+                $possibleErrors += New-AnalyzeResult -TestName "IE Site Assignment" -Type Warning -Issue "We could not detect https://autologon.microsoftazuread-sso.com in the Local Intranet Zone of Internet Explorer." -PossibleCause "One possibility is, that you have configured it manually on this test client in Internet Explorer. This check only validates, if it is assigned through a group policy.
+                The second option is, that you configured a toplevel site in the intranet site and not especially the above mentioned URL including the protocol."
+            }
         }
 
         $IESites = Get-SiteToZoneAssignment | Where-Object { ($_.Url -eq "https://device.login.microsoftonline.com" -or $_.Url -eq "device.login.microsoftonline.com") -and $_.Zone -eq "Local Intranet Zone" }
         if ($null -eq $IESites) {
-            $possibleErrors += New-AnalyzeResult -TestName "IE Site Assignment" -Type Warning -Issue "We could not detect https://device.login.microsoftonline.com in the Local Intranet Zone of Internet Explorer. To avoid certificate prompts when users in register devices authenticate to Azure AD you can push a policy to your domain-joined devices to add the following URL to the Local Intranet zone in Internet Explorer." -PossibleCause "One possibility is, that you have configured it manually on this test client in Internet Explorer. This check only validates, if it is assigned through a group policy.
-            The second option is, that you configured a toplevel site in the intranet site and not especially the above mentioned URL including the protocol."
+            #Check if it is also not set manually:
+            $IESitesManual = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\microsoftonline.com\device.login" -Name https -ErrorAction SilentlyContinue
+            if($IESitesManual -ne 1){
+                $possibleErrors += New-AnalyzeResult -TestName "IE Site Assignment" -Type Warning -Issue "We could not detect https://device.login.microsoftonline.com in the Local Intranet Zone of Internet Explorer. To avoid certificate prompts when users in register devices authenticate to Azure AD you can push a policy to your domain-joined devices to add the following URL to the Local Intranet zone in Internet Explorer." -PossibleCause "One possibility is, that you have configured it manually on this test client in Internet Explorer. This check only validates, if it is assigned through a group policy.
+                The second option is, that you configured a toplevel site in the intranet site and not especially the above mentioned URL including the protocol."
+            }
         }
         # GPO Checks
         try {
@@ -118,6 +126,11 @@ function Invoke-AnalyzeHybridJoinStatus {
         foreach ($WPJoinEvent in ($WPJoinEvents | Group-Object -Property Id)) {
             $possibleErrors += New-AnalyzeResult -TestName "EventLog-WorkplaceJoin" -Type ($WPJoinEvent.Group[0].LevelDisplayName) -Issue "EventId: $($WPJoinEvent.Name)`n$($WPJoinEvent.Group[0].Message)" -PossibleCause ""
         }
+        $UsrDevRegEvents = Get-WinEvent -LogName "Microsoft-Windows-User Device Registration/Admin" | Where-Object { ($_.LevelDisplayName -eq "Error" -or $_.LevelDisplayName -eq "Warning") -and $_.TimeCreated -gt [DateTime]::Now.AddMinutes(-10)  }
+        foreach ($UsrDevRegEvent in ($UsrDevRegEvents | Group-Object -Property Id)) {
+            $possibleErrors += New-AnalyzeResult -TestName "EventLog-WorkplaceJoin" -Type ($UsrDevRegEvent.Group[0].LevelDisplayName) -Issue "EventId: $($UsrDevRegEvent.Name)`n$($UsrDevRegEvent.Group[0].Message)" -PossibleCause ""
+        }
+        
     }
     # Connectifity Tests
     $isVerbose = $VerbosePreference -eq 'Continue'
@@ -157,7 +170,7 @@ function Invoke-AnalyzeHybridJoinStatus {
 
     # No errors detected, return success message
     if ($possibleErrors.Count -eq 0) {
-        $possibleErrors += New-AnalyzeResult -TestName "All" -Type Information -Issue "All tests went through successfully." -PossibleCause ""
+        $possibleErrors += New-AnalyzeResult -TestName "All" -Type Information -Issue "All tests went through successfully. $(if(-not $IncludeEventLog){'You can try to run the command again with the -IncludeEventLog parameter.'})" -PossibleCause ""
     }
 
     return $possibleErrors

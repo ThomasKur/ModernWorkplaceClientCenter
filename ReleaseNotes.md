@@ -1,5 +1,10 @@
 # Release Notes
 
+## 0.1.10 - Extended Azure AD Hybrid Join checks
+
+* Extended Azure AD Hybrid Join checks to include User Device Registration Event Log Invoke-AnalyzeHybridJoinStatus
+* Check manually defined IE Intranet Sites Invoke-AnalyzeHybridJoinStatus
+
 ## 0.1.9 - Delivery Optimization
 
 * Improved loading of HttpConnectivtyTester Module
