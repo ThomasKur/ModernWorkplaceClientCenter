@@ -1,6 +1,6 @@
 ﻿$ModulePath = ".\PSModule\ModernWorkplaceClientCenter"
 
-## The following four lines only need to be declared once in your script.
+#region UI 
 $yes = New-Object System.Management.Automation.Host.ChoiceDescription "&Yes","Description."
 $no = New-Object System.Management.Automation.Host.ChoiceDescription "&No","Description."
 $cancel = New-Object System.Management.Automation.Host.ChoiceDescription "&Cancel","Description."
@@ -20,9 +20,10 @@ switch ($result) {
         Write-Error "Canceled Publishing Process" -ErrorAction Stop
     }
 }
+#endregion
 
 #region Code Analyzer
-Import-Module -Name PSScriptAnalyzer 
+Import-Module -Name PSScriptAnalyzer -Force
 $ScriptAnalyzerResult = Invoke-ScriptAnalyzer -Path $ModulePath -Recurse -ErrorAction Stop -ExcludeRule @("PSAvoidTrailingWhitespace")
 
 if($ScriptAnalyzerResult){
@@ -49,7 +50,7 @@ switch ($result) {
         Update-ModuleManifest -Path "$ModulePath\ModernWorkplaceClientCenter.psd1" `
             -FunctionsToExport $ExportableFunctions `
             -ReleaseNotes $ReleaseNote `
-            -NestedModules @("NestedModules/HttpConnectivityTester/HttpConnectivityTester.psm1") `
+            -NestedModules @("NestedModules/HttpConnectivityTester/HttpConnectivityTester.psm1","NestedModules/TcpConnectivityTester/TcpConnectivityTester.psm1") `
             -IconUri "https://raw.githubusercontent.com/ThomasKur/ModernWorkplaceClientCenter/master/Logo/MWCC-Logo-512.png" `
             -ModuleVersion $SuggestedNewVersion
     }
@@ -58,7 +59,7 @@ switch ($result) {
         Update-ModuleManifest -Path "$ModulePath\ModernWorkplaceClientCenter.psd1" `
             -FunctionsToExport $ExportableFunctions `
             -ReleaseNotes $ReleaseNote `
-            -NestedModules @("NestedModules/HttpConnectivityTester/HttpConnectivityTester.psm1") `
+            -NestedModules @("NestedModules/HttpConnectivityTester/HttpConnectivityTester.psm1","NestedModules/TcpConnectivityTester/TcpConnectivityTester.psm1") `
             -IconUri "https://raw.githubusercontent.com/ThomasKur/ModernWorkplaceClientCenter/master/Logo/MWCC-Logo-512.png" `
             -ModuleVersion $CurrentVersion
     }

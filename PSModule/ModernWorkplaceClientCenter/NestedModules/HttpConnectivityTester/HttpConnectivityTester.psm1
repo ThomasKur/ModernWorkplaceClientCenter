@@ -388,7 +388,6 @@ Function Get-HttpConnectivity() {
 
         [Parameter(Mandatory=$false, HelpMessage="Whether to ignore certificate validation errors so they don't affect the connectivity test. Some HTTPS endpoints are not meant to be accessed by a browser so the endpoint will not validate against browser security requirements.")]
         [switch]$IgnoreCertificateValidationErrors,
-
         [Parameter(Mandatory=$false, HelpMessage='Whether to perform a Symantec BlueCoat Site Review lookup on the URL. Warning: The BlueCoat Site Review REST API is rate limited. Automatic throttling is performed when this parameter is used.')]
         [switch]$PerformBluecoatLookup
     )

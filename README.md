@@ -19,14 +19,14 @@ The following functions are available now:
 * Get-MDMPSScriptStatus --> Returns information about the execution of PowerShell Scripts deployed with Intune.
 * Get-BCStatusDetailed --> Returns Branch Cache usage statistsics of the last downloads per source host including peer usage statistics.
 * Invoke-AnalyzeDeliveryOptimization --> Analyze Delivery Optimization Configuration and connectifity on a device.
+* Invoke-AnalyzeAzureConnectivity --> Check for connectivity issues to O365 and Azure based on the actual published list of Microsoft(https://docs.microsoft.com/en-us/office365/enterprise/urls-and-ip-address-ranges).
 
 The following functions will be available in the near future:
 
 * Autopilot Troubleshooting
 * Improvement Intune Enrollment Troubleshooting
-* Intune MSI App Installation Troubleshooting
-* Intune PowerShell Script Installation Troubleshooting
-* BranchCache and Delivery Optimization Troubleshooting
+* Improvement Intune MSI App Installation Troubleshooting
+* Improvement Intune PowerShell Script Installation Troubleshooting
 * Pester Tests
 
 ### Usage

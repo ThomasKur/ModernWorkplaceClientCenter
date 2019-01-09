@@ -4,6 +4,8 @@
 
 * Extended Azure AD Hybrid Join checks to include User Device Registration Event Log Invoke-AnalyzeHybridJoinStatus
 * Check manually defined IE Intranet Sites Invoke-AnalyzeHybridJoinStatus
+* Added TcpConnectivityTester Module to check Non HTTP Connections
+* Added Invoke-AnalyzeAzureConnectivity to check for connectivity issues to O365 and Azure based on the actual published list of Microsoft.
 
 ## 0.1.9 - Delivery Optimization
 

@@ -24,3 +24,11 @@ if($HttpConnectivitytester){
     Write-Warning -Message "HttpConnectivityTester module is not loaded, trying to import it."
     Import-Module -Name (Join-Path -Path $PSScriptRoot -ChildPath "NestedModules\HttpConnectivityTester\HttpConnectivityTester.psd1")
 }
+
+$TcpConnectivitytester = Get-Module -Name TcpConnectivityTester
+if($TcpConnectivitytester){
+    Write-Verbose -Message "TcpConnectivityTester module is loaded."
+} else {
+    Write-Warning -Message "TcpConnectivityTester module is not loaded, trying to import it."
+    Import-Module -Name (Join-Path -Path $PSScriptRoot -ChildPath "NestedModules\TcpConnectivityTester\TcpConnectivityTester.psd1")
+}
