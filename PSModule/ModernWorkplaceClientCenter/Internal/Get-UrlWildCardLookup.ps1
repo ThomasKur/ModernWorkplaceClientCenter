@@ -48,5 +48,5 @@ function Get-UrlWildCardLookup{
         Write-Warning "Could not find '$Path\Data\UrlWildcardLookup.json', failed to convert wildcard into static url. $($_.Exception.Message)" 
         
     }
-    return $StaticUrls
+    return [String[]]$StaticUrls
 }

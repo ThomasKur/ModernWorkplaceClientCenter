@@ -1,5 +1,9 @@
 # Release Notes
 
+## 0.1.11 - Bugfix
+
+* Bugfix Invoke-AnalyzeAzureConnectivity
+
 ## 0.1.10 - Extended Azure AD Hybrid Join checks
 
 * Extended Azure AD Hybrid Join checks to include User Device Registration Event Log Invoke-AnalyzeHybridJoinStatus

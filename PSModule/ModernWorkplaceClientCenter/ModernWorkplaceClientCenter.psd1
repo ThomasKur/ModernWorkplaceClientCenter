@@ -12,7 +12,7 @@
 RootModule = 'ModernWorkplaceClientCenter.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.1.10'
+ModuleVersion = '0.1.11'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -113,12 +113,9 @@ PrivateData = @{
         IconUri = 'https://raw.githubusercontent.com/ThomasKur/ModernWorkplaceClientCenter/master/Logo/MWCC-Logo-512.png'
 
         # ReleaseNotes of this module
-        ReleaseNotes = ' 0.1.10 - Extended Azure AD Hybrid Join checks
+        ReleaseNotes = ' 0.1.11 - Bugfix
 
-* Extended Azure AD Hybrid Join checks to include User Device Registration Event Log Invoke-AnalyzeHybridJoinStatus
-* Check manually defined IE Intranet Sites Invoke-AnalyzeHybridJoinStatus
-* Added TcpConnectivityTester Module to check Non HTTP Connections
-* Added Invoke-AnalyzeAzureConnectivity to check for connectivity issues to O365 and Azure based on the actual published list of Microsoft.
+* Bugfix Invoke-AnalyzeAzureConnectivity
 
 
 

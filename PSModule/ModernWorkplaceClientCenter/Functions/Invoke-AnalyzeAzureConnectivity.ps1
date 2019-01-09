@@ -41,7 +41,7 @@ function Invoke-AnalyzeAzureConnectivity {
     $j = 0
     foreach($EndpointsObj in $EndpointsObjs){
         Write-Progress -Activity "Connectivity Tests" -status "Building urls for $($EndpointsObj.serviceArea) with id $($EndpointsObj.id)" -percentComplete ($j / $EndpointsObjs.length*100)
-        if($null -ne $EndpointsObj.tcpPorts){
+        if($null -eq $EndpointsObj.tcpPorts){
             Add-Member -InputObject $EndpointsObj -MemberType NoteProperty -Name tcpPorts -Value "443"
         }
         foreach($Port in $EndpointsObj.tcpPorts.Split(',')){
