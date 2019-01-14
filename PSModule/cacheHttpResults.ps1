@@ -14,7 +14,7 @@ $data = New-Object System.Collections.Generic.List[PSCustomObject]
 $EndpointsObjs = $Endpoints.content | ConvertFrom-Json
 Write-Verbose "Found $($EndpointsObjs.length) endpoints to check"
 foreach($EndpointsObj in $EndpointsObjs){
-    if($EndpointsObj.tcpPorts -eq $null){
+    if($null -eq $EndpointsObj.tcpPorts){
         Add-Member -InputObject $EndpointsObj -MemberType NoteProperty -Name tcpPorts -Value "443"
     }
     foreach($Port in $EndpointsObj.tcpPorts.Split(',')){
