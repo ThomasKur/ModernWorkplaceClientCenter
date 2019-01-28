@@ -43,8 +43,8 @@ function Invoke-AnalyzeHybridJoinStatus {
     }
     else {
         # Check Service Connection Point
-        $getdomain = [System.Directoryservices.Activedirectory.Domain]::GetCurrentDomain()
-        $getdomaindn = $getdomain.Name.Split('.') -join ",DC="
+        $Forest = [System.DirectoryServices.ActiveDirectory.Forest]::GetCurrentForest()
+        $getdomaindn = $Forest.RootDomain.Split('.') -join ",DC="
         $scp = New-Object System.DirectoryServices.DirectoryEntry
         $scp.Path = "LDAP://CN=62a0ff2e-97b9-4513-943f-0d221bd30080,CN=Device Registration Configuration,CN=Services,CN=Configuration,DC=$getdomaindn";
         if ([String]::IsNullOrWhiteSpace($scp.Keywords)) {
