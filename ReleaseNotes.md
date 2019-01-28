@@ -1,5 +1,9 @@
 # Release Notes
 
+## 0.1.12 - Improvement Invoke-AnalyzeHybridJoinStatus 
+
+* Improve SCP check inInvoke-AnalyzeHybridJoinStatus to read information from root domain.
+
 ## 0.1.11 - Bugfix
 
 * Bugfix Invoke-AnalyzeAzureConnectivity
