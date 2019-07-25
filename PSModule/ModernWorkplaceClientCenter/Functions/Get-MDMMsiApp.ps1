@@ -59,7 +59,7 @@ function Get-MDMMsiApp() {
                         Add-Member -InputObject $AppTemp -MemberType NoteProperty -Name "LocURI" -Value $App.LocURI
                         #Check if App is from Syntaro
                         $SyntaroApp = $null
-                        $SyntaroApps = Get-ChildItem -Path HKLM:\SOFTWARE\Syntaro\ApplicationManagement\
+                        $SyntaroApps = Get-ChildItem -Path HKLM:\SOFTWARE\Syntaro\ApplicationManagement\ -ErrorAction SilentlyContinue
                         foreach($TempSyntaroApp in $SyntaroApps){
                             if((Get-ItemProperty -Path $TempSyntaroApp.PSPath).MsiCode -eq $App.PSChildName){
                                 $SyntaroApp = (Get-ItemProperty -Path $TempSyntaroApp.PSPath)
