@@ -1,5 +1,9 @@
 # Release Notes
 
+## 0.1.13 - Bugfixing Invoke-AnalyzeHybridJoinStatus 
+
+* Bugfix with String Array and Split Invoke-AnalyzeHybridJoinStatus.
+
 ## 0.1.12 - Improvement Invoke-AnalyzeHybridJoinStatus 
 
 * Improve SCP check inInvoke-AnalyzeHybridJoinStatus to read information from root domain.
