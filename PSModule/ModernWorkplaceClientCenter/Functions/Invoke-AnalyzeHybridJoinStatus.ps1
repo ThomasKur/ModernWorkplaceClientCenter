@@ -155,7 +155,7 @@ function Invoke-AnalyzeHybridJoinStatus {
         if ($connectivity.Resolved -eq $false) {
             $possibleErrors += New-AnalyzeResult -TestName "Connectivity" -Type "Error" -Issue "DNS name not resolved `n $($connectivity)" -PossibleCause "DNS server not correctly configured."
         }
-        if ($connectivity.ActualStatusCode -ne $connectivity.ExpectedStatusCode) {
+        if ($connectivity.ExpectedStatusCode -notcontains $connectivity.ActualStatusCode) {
             if($connectivity.ActualStatusCode -eq 407){
                 $Cause = "Keep in mind that the proxy has to be set in WinHTTP.`nWindows 1709 and newer: Set the proxy by using netsh or WPAD. --> https://docs.microsoft.com/en-us/windows/desktop/WinHttp/winhttp-autoproxy-support `nWindows 1709 and older: Set the proxy by using 'netsh winhttp set proxy ?' --> https://blogs.technet.microsoft.com/netgeeks/2018/06/19/winhttp-proxy-settings-deployed-by-gpo/ "
              } else {

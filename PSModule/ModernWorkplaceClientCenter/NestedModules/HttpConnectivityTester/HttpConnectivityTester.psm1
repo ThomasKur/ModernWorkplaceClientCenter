@@ -376,7 +376,7 @@ Function Get-HttpConnectivity() {
 
         [Parameter(Mandatory=$false, HelpMessage='The HTTP status code expected to be returned. Defaults to 200.')]
         [ValidateNotNullOrEmpty()]
-        [Int32]$ExpectedStatusCode = 200,
+        [Int32[]]$ExpectedStatusCode = 200,
 
         [Parameter(Mandatory=$false, HelpMessage='A description of the connectivity test or purpose of the URL.')]
         [ValidateNotNullOrEmpty()]
@@ -478,7 +478,8 @@ Function Get-HttpConnectivity() {
         }
     }
 
-    $hasServerCertificateError = if ($null -eq $script:ServerCertificateError) { $false } else { $script:ServerCertificateError -ne [Net.Security.SslPolicyErrors]::None }
+
+    $hasServerCertificateError = if ($null -eq $script:ServerCertificateError -or $IgnoreCertificateValidationErrors) { $false } else { $script:ServerCertificateError -ne [Net.Security.SslPolicyErrors]::None }
 
     $serverCertificateErrorMessage = ''
 
@@ -505,7 +506,7 @@ Function Get-HttpConnectivity() {
     $isUnexpectedStatus = !($statusCode -in @(200,400,403,404,500,501,503,504))
     $simpleStatusMessage = if ($isUnexpectedStatus) { $statusMessage } else { '' }
 
-    $connectivitySummary = ('{0}Test Url: {1}{2}Url to Unblock: {3}{4}Url Type: {5}{6}Description: {7}{8}Resolved: {9}{10}IP Addresses: {11}{12}DNS Aliases: {13}{14}Actual Status Code: {15}{16}Expected Status Code: {17}{18}Is Unexpected Status Code: {19}{20}Status Message: {21}{22}Blocked: {23}{24}Certificate Error: {25}{26}Certificate Error Message: {27}{28}Ignore Certificate Validation Errors: {29}{30}{31}' -f $newLine,$testUri,$newLine,$UnblockUrl,$newLine,$urlType,$newLine,$Description,$newLine,$resolved,$newLine,($address -join ', '),$newLine,($alias -join ', '),$newLine,$actualStatusCode,$newLine,$ExpectedStatusCode,$newLine,$isUnexpectedStatus,$newLine,$simpleStatusMessage,$newLine,$isBlocked,$newLine,$serverCertificateObject.HasError,$newLine,$serverCertificateObject.ErrorMessage,$newLine,$serverCertificateObject.IgnoreError,$newLine,$newLine)
+    $connectivitySummary = ('{0}Test Url: {1}{2}Url to Unblock: {3}{4}Url Type: {5}{6}Description: {7}{8}Resolved: {9}{10}IP Addresses: {11}{12}DNS Aliases: {13}{14}Actual Status Code: {15}{16}Expected Status Code: {17}{18}Is Unexpected Status Code: {19}{20}Status Message: {21}{22}Blocked: {23}{24}Certificate Error: {25}{26}Certificate Error Message: {27}{28}Ignore Certificate Validation Errors: {29}{30}{31}' -f $newLine,$testUri,$newLine,$UnblockUrl,$newLine,$urlType,$newLine,$Description,$newLine,$resolved,$newLine,($address -join ', '),$newLine,($alias -join ', '),$newLine,$actualStatusCode,$newLine,($ExpectedStatusCode -join ","),$newLine,$isUnexpectedStatus,$newLine,$simpleStatusMessage,$newLine,$isBlocked,$newLine,$serverCertificateObject.HasError,$newLine,$serverCertificateObject.ErrorMessage,$newLine,$serverCertificateObject.IgnoreError,$newLine,$newLine)
     Write-Verbose -Message $connectivitySummary
 
     $bluecoat = $null
@@ -527,7 +528,7 @@ Function Get-HttpConnectivity() {
         DnsAliases = [string[]]$alias;
         Description = $Description;
         ActualStatusCode = [int]$actualStatusCode;
-        ExpectedStatusCode = $ExpectedStatusCode;
+        ExpectedStatusCode = [Int32[]]$ExpectedStatusCode;
         UnexpectedStatus = $isUnexpectedStatus;
         StatusMessage = $simpleStatusMessage;
         DetailedStatusMessage = $statusMessage;

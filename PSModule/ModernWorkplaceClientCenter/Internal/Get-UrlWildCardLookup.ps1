@@ -29,8 +29,13 @@ function Get-UrlWildCardLookup{
                 if($null -ne $WildCardJSONObj.static){
                     foreach($UrlPart in $WildCardJSONObj.static.Split(",")){
                         if(-not [String]::IsNullOrWhiteSpace($UrlPart)){
-                            $StaticUrls += $Url -replace "\*",$UrlPart
-                            Write-Verbose "Resolved URL $($Url -replace "\*",$UrlPart)"
+                            if($UrlPart -match "http*"){
+                                $StaticUrls += $UrlPart
+                                Write-Verbose "Resolved URL $UrlPart"
+                            } else {
+                                $StaticUrls += $Url -replace "\*",$UrlPart
+                                Write-Verbose "Resolved URL $($Url -replace "\*",$UrlPart)"
+                            }
                         }
                     }
                 } else {

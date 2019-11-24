@@ -97,11 +97,7 @@ function Invoke-AnalyzeAzureConnectivity {
         $results.Add($connectivity)
         if ($connectivity.Blocked -eq $true -and $dataObj.Blocked -eq $false) {
             $possibleErrors += New-AnalyzeResult -TestName "Connectivity" -Type "Error" -Issue "Connection blocked `n $($connectivity)" -PossibleCause "Firewall is blocking connection to '$($connectivity.UnblockUrl)'."
-        }
-        if ($connectivity.Resolved -eq $false) {
-            $possibleErrors += New-AnalyzeResult -TestName "Connectivity" -Type "Error" -Issue "DNS name not resolved `n $($connectivity)" -PossibleCause "DNS server not correctly configured."
-        }
-        if ($connectivity.ActualStatusCode -ne $connectivity.ExpectedStatusCode) {
+        } elseif ($connectivity.ExpectedStatusCode -notcontains $connectivity.ActualStatusCode) {
             if($connectivity.ActualStatusCode -eq 407){
                 $Cause = "Keep in mind that the proxy has to be set in WinHTTP.`nWindows 1709 and newer: Set the proxy by using netsh or WPAD. --> https://docs.microsoft.com/en-us/windows/desktop/WinHttp/winhttp-autoproxy-support `nWindows 1709 and older: Set the proxy by using 'netsh winhttp set proxy ?' --> https://blogs.technet.microsoft.com/netgeeks/2018/06/19/winhttp-proxy-settings-deployed-by-gpo/ "
              } else {
@@ -109,6 +105,10 @@ function Invoke-AnalyzeAzureConnectivity {
              }
             $possibleErrors += New-AnalyzeResult -TestName "Connectivity" -Type "Error" -Issue "Returned Status code '$($connectivity.ActualStatusCode)' is not expected '$($connectivity.ExpectedStatusCode)'`n $($connectivity)" -PossibleCause $Cause
         }
+        if ($connectivity.Resolved -eq $false) {
+            $possibleErrors += New-AnalyzeResult -TestName "Connectivity" -Type "Error" -Issue "DNS name not resolved `n $($connectivity)" -PossibleCause "DNS server not correctly configured."
+        }
+        
         if ($null -ne $connectivity.ServerCertificate -and $connectivity.ServerCertificate.HasError -and -not $dataObj.IgnoreCertificateValidationErrors) {
             $possibleErrors += New-AnalyzeResult -TestName "Connectivity" -Type "Error" -Issue "Certificate Error when connecting to $($connectivity.TestUrl)`n $(($connectivity.ServerCertificate))" -PossibleCause "Interfering Proxy server can change Certificate or not the Root Certificate is not trusted."
         }

@@ -1,5 +1,10 @@
 # Release Notes
 
+## 0.1.14 - Adding Invoke-TestAutopilotNetworkEndpoints and Invoke-IntuneCleanup
+
+* Automatically clean up duplicated devices in Intune based on the device serial number.
+* Check Autopilot Network Endpoints
+
 ## 0.1.13 - Bugfixing Invoke-AnalyzeHybridJoinStatus 
 
 * Bugfix with String Array and Split Invoke-AnalyzeHybridJoinStatus.
