@@ -2,7 +2,7 @@
 
 <img align="right" src="https://raw.githubusercontent.com/ThomasKur/ModernWorkplaceClientCenter/master/Logo/MWCC-Logo-256.png" alt="MWCC Logo">This repository will be the home of a PowerShell Module, which helps to simplify tasks on MDM managed Windows clients. In a second step there will be a UI, which leverages these PowerShell functions for Admins which like a UI. Feedback is welcome!
 
-## PowerShell Module 
+## PowerShell Module
 
 This PowerShell module will contain all functions for DevOps like me, which like to use PowerShell everywhere. The goal of the module is not only to read and display properties, instead it should correleate settings and event log entries together and help you during troubleshooting. If you have some specific use cases like "If this happens, then you can apply this solution", then I'm happy to get your feedback.
 
@@ -40,7 +40,7 @@ Install-Module ModernWorkplaceClientCenter
 Get all available Commands of the module:
 
 ```powershell
-Get-Command -Module ModernWorkplaceClientCenter 
+Get-Command -Module ModernWorkplaceClientCenter
 ```
 
 ## Client Center UI

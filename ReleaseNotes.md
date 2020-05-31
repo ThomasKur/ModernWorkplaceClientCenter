@@ -1,15 +1,20 @@
 # Release Notes
 
+## 0.1.15 - Improving Get-Dsregcmd parsing
+
+* The sections displayed in the dsregcmd /status output are now sub objects. Therfore also multiple work accounts are not supported.
+* Updating chached results for connectivity tests
+
 ## 0.1.14 - Adding Invoke-TestAutopilotNetworkEndpoints and Invoke-IntuneCleanup
 
 * Automatically clean up duplicated devices in Intune based on the device serial number.
 * Check Autopilot Network Endpoints
 
-## 0.1.13 - Bugfixing Invoke-AnalyzeHybridJoinStatus 
+## 0.1.13 - Bugfixing Invoke-AnalyzeHybridJoinStatus
 
 * Bugfix with String Array and Split Invoke-AnalyzeHybridJoinStatus.
 
-## 0.1.12 - Improvement Invoke-AnalyzeHybridJoinStatus 
+## 0.1.12 - Improvement Invoke-AnalyzeHybridJoinStatus
 
 * Improve SCP check inInvoke-AnalyzeHybridJoinStatus to read information from root domain.
 
