@@ -1,5 +1,9 @@
 # Release Notes
 
+## 0.1.16 - Bugfix Get-Dsregcmd
+
+* Last section was not returned
+
 ## 0.1.15 - Improving Get-Dsregcmd parsing
 
 * The sections displayed in the dsregcmd /status output are now sub objects. Therfore also multiple work accounts are not supported.
