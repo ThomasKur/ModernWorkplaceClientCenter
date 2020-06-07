@@ -12,7 +12,7 @@
 RootModule = 'ModernWorkplaceClientCenter.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.1.16'
+ModuleVersion = '0.1.17'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -114,9 +114,9 @@ PrivateData = @{
         IconUri = 'https://raw.githubusercontent.com/ThomasKur/ModernWorkplaceClientCenter/master/Logo/MWCC-Logo-512.png'
 
         # ReleaseNotes of this module
-        ReleaseNotes = ' 0.1.16 - Bugfix Get-Dsregcmd
+        ReleaseNotes = ' 0.1.17 - Bugfix Get-Dsregcmd
 
-* Last section was not returned
+* Regex change required to return every property.
 
 
 

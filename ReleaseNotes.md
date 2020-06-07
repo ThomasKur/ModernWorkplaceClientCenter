@@ -1,5 +1,9 @@
 # Release Notes
 
+## 0.1.17 - Bugfix Get-Dsregcmd
+
+* Regex change required to return every property.
+
 ## 0.1.16 - Bugfix Get-Dsregcmd
 
 * Last section was not returned
