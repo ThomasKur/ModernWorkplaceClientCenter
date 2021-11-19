@@ -10,21 +10,30 @@ function Get-DsRegStatus {
      # Displays a full output of dsregcmd / status.
      Get-DsRegStatus
      #>
-     $dsregcmd = dsregcmd /status
-     $o = New-Object -TypeName PSObject
-     foreach($line in $dsregcmd){
-          if($line -like "| *"){
-               if(-not [String]::IsNullOrWhiteSpace($currentSection) -and $null -ne $so){
-                    Add-Member -InputObject $o -MemberType NoteProperty -Name $currentSection -Value $so -ErrorAction SilentlyContinue
-               }
-               $currentSection = $line.Replace("|","").Replace(" ","").Trim()
-               $so = New-Object -TypeName PSObject
-          } elseif($line -match " *[A-z]+ : [A-z0-9\{\}]+ *"){
-               Add-Member -InputObject $so -MemberType NoteProperty -Name (([String]$line).Trim() -split " : ")[0] -Value (([String]$line).Trim() -split " : ")[1] -ErrorAction SilentlyContinue
-          }
+     [cmdletbinding()]
+     Param()
+     $dsregcmd = & "$env:windir\system32\dsregcmd.exe" /status 2>&1
+     $ResultObj = New-Object -TypeName PSObject
+
+     # This was original pattern string but did not parse all properties
+     ## $PatStr = ' *[A-z]+ : [A-z]+ *'
+
+     # Updated RegEx pattern string
+     $PatStr = ' *[^\n\r]+ : [^\n]+ *'
+
+     # Parse through output using RegEx pattern, iterate through lines and build objects
+     $null = $dsregcmd | Select-String -Pattern $PatStr | ForEach-Object {
+          # Set noteproperty name
+          $PropName = (([String]$_).Trim() -split " : ")[0]
+          $PropName = $PropName.replace(' ', '')
+
+          # Set noteproperty value
+          $Val = (([String]$_).Trim() -split " : ")[1]
+          # Replace YES/NO value with bool type
+          $Val = $Val -Replace ('^YES$', [bool]$true) -Replace ('^NO$', [bool]$false)
+          
+          # Add property to PSObject of $ResultObj
+          Add-Member -InputObject $ResultObj -MemberType NoteProperty -Name $PropName -Value $Val
      }
-     if(-not [String]::IsNullOrWhiteSpace($currentSection) -and $null -ne $so){
-          Add-Member -InputObject $o -MemberType NoteProperty -Name $currentSection -Value $so -ErrorAction SilentlyContinue
-     }
-    return $o
+     $ResultObj
 }
